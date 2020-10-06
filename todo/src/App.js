@@ -1,20 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import "./App.css";
+
+const initialState = { todoList: [] };
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "ADD_TODO":
+      return {
+        ...state,
+        todoList: [...state.todoList, action.payload],
+      };
+    case "MAKE_COMPLETE":
+
+    case "CLEAR_COMPLETE":
+
+    default:
+      return state;
+  }
+};
 
 function App() {
   const [inputVal, setInputVal] = useState("");
-  const [todoList, setTodoList] = useState([]);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const onInputChange = (e) => {
     setInputVal(e.target.value);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     const newTask = {
-      task: inputVal,
+      item: inputVal,
       id: Date.now(),
       completed: false,
     };
-    setTodoList([...todoList, newTask]);
+    dispatch({ type: "ADD_TODO", payload: newTask });
     setInputVal("");
   };
   return (
@@ -32,7 +49,8 @@ function App() {
         </form>
       </div>
       <div>
-        {todoList.length > 0 && todoList.map((todo) => <div>{todo.task}</div>)}
+        {state.todoList.length > 0 &&
+          state.todoList.map((todo) => <div>{todo.item}</div>)}
       </div>
     </div>
   );
