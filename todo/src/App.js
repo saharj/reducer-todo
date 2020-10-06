@@ -10,7 +10,14 @@ const reducer = (state, action) => {
         todoList: [...state.todoList, action.payload],
       };
     case "MAKE_COMPLETE":
-
+      return {
+        ...state,
+        todoList: state.todoList.map((item) => {
+          return item.id === action.payload
+            ? { ...item, completed: true }
+            : item;
+        }),
+      };
     case "CLEAR_COMPLETE":
 
     default:
@@ -34,6 +41,10 @@ function App() {
     dispatch({ type: "ADD_TODO", payload: newTask });
     setInputVal("");
   };
+
+  const onItemClick = (e, todo) => {
+    dispatch({ type: "MAKE_COMPLETE", payload: todo.id });
+  };
   return (
     <div className="App">
       <div>
@@ -50,7 +61,17 @@ function App() {
       </div>
       <div>
         {state.todoList.length > 0 &&
-          state.todoList.map((todo) => <div>{todo.item}</div>)}
+          state.todoList.map((todo, i) => (
+            <div
+              key={i}
+              onClick={(e) => onItemClick(e, todo)}
+              style={{
+                textDecoration: todo.completed ? "line-through" : "none",
+              }}
+            >
+              {todo.item}
+            </div>
+          ))}
       </div>
     </div>
   );
