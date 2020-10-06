@@ -19,7 +19,10 @@ const reducer = (state, action) => {
         }),
       };
     case "CLEAR_COMPLETE":
-
+      return {
+        ...state,
+        todoList: state.todoList.filter((item) => item.completed === false),
+      };
     default:
       return state;
   }
@@ -45,6 +48,11 @@ function App() {
   const onItemClick = (e, todo) => {
     dispatch({ type: "MAKE_COMPLETE", payload: todo.id });
   };
+
+  const onClearClick = (e) => {
+    dispatch({ type: "CLEAR_COMPLETE" });
+  };
+
   return (
     <div className="App">
       <div>
@@ -57,6 +65,7 @@ function App() {
             onChange={onInputChange}
           />
           <button>Add Todo</button>
+          <button onClick={onClearClick}>Clear Completed</button>
         </form>
       </div>
       <div>
